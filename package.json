@@ -12,11 +12,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@vercel/node": "^4.0.0",
+    "framer-motion": "^11.0.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "framer-motion": "^11.0.0"
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@types/node": "^25.4.0",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
     "@vitejs/plugin-react": "^4.0.0",

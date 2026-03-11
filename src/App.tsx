@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import questions from '../questions.json';
 import { recommendPosition } from '../results';
+import { logTestResult } from './utils/analytics';
 import type { Question, UserAnswer } from './types';
 
 function App() {
@@ -10,8 +11,62 @@ function App() {
   const [showResult, setShowResult] = useState(false);
   const [direction, setDirection] = useState<'left' | 'right'>('left');
 
+  // 隐私和数据记录状态
+  const [showPrivacyConsent, setShowPrivacyConsent] = useState(false);
+  const [analyticsConsent, setAnalyticsConsent] = useState(false);
+  const [dataAnonymized, setDataAnonymized] = useState(true);
+  const [isLoggingData, setIsLoggingData] = useState(false);
+
   const currentQuestion = questions[currentQuestionIndex] as Question;
   const totalQuestions = questions.length;
+
+  // 检查隐私设置
+  useEffect(() => {
+    const savedConsent = localStorage.getItem('analytics_consent');
+    const savedAnonymized = localStorage.getItem('analytics_anonymized');
+
+    if (savedConsent !== null) {
+      setAnalyticsConsent(savedConsent === 'true');
+    } else {
+      // 第一次访问，显示隐私同意弹窗
+      setShowPrivacyConsent(true);
+    }
+
+    if (savedAnonymized !== null) {
+      setDataAnonymized(savedAnonymized === 'true');
+    }
+  }, []);
+
+  // 发送测试结果到分析服务
+  const sendAnalyticsData = async () => {
+    if (!analyticsConsent) return; // 用户未同意数据收集
+
+    setIsLoggingData(true);
+    try {
+      const result = getResult();
+      await logTestResult(
+        userAnswers.map(answer => ({
+          questionId: answer.questionId,
+          optionId: answer.optionId,
+          optionType: answer.optionType
+        })),
+        result,
+        {
+          anonymized: dataAnonymized,
+          consentGiven: analyticsConsent
+        }
+      );
+
+      if (import.meta.env.DEV) {
+        console.log('📊 Test result logged successfully');
+      }
+    } catch (error) {
+      console.error('Failed to log test result:', error);
+      // 静默失败，不影响用户体验
+    } finally {
+      setIsLoggingData(false);
+    }
+  };
 
   // 处理选项选择
   const handleOptionSelect = (optionId: string, optionType: string) => {
@@ -24,8 +79,11 @@ function App() {
     const newAnswers = [...userAnswers, newAnswer];
     setUserAnswers(newAnswers);
 
-    // 如果是最后一题，显示结果
+    // 如果是最后一题，显示结果并发送数据
     if (currentQuestionIndex === totalQuestions - 1) {
+      // 发送数据到分析服务
+      sendAnalyticsData();
+
       setTimeout(() => setShowResult(true), 500);
     } else {
       // 下一题
@@ -57,6 +115,108 @@ function App() {
     setCurrentQuestionIndex(0);
     setShowResult(false);
     setDirection('left');
+  };
+
+  // 隐私设置处理
+  const handlePrivacyConsent = (consent: boolean, anonymized: boolean) => {
+    setAnalyticsConsent(consent);
+    setDataAnonymized(anonymized);
+    setShowPrivacyConsent(false);
+
+    // 保存到localStorage
+    localStorage.setItem('analytics_consent', consent.toString());
+    localStorage.setItem('analytics_anonymized', anonymized.toString());
+
+    if (consent && import.meta.env.DEV) {
+      console.log('✅ 隐私设置已保存:', { consent, anonymized });
+    }
+  };
+
+  // 隐私设置弹窗
+  const renderPrivacyConsent = () => {
+    if (!showPrivacyConsent) return null;
+
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+      >
+        <motion.div
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl p-6 max-w-md w-full border border-gray-700/50 shadow-2xl"
+        >
+          <div className="mb-4">
+            <div className="w-12 h-12 rounded-full bg-gradient-to-r from-cyan-500 to-purple-600 flex items-center justify-center text-xl mb-3">
+              🔒
+            </div>
+            <h3 className="text-xl font-bold mb-2">隐私设置</h3>
+            <p className="text-gray-300 text-sm mb-4">
+              为了更好地改进应用，我们希望能匿名收集测试数据。所有数据都将经过匿名化处理，不会包含任何个人信息。
+            </p>
+
+            <div className="space-y-4">
+              <div className="flex items-start">
+                <input
+                  type="checkbox"
+                  id="anonymized"
+                  checked={dataAnonymized}
+                  onChange={(e) => setDataAnonymized(e.target.checked)}
+                  className="mt-1 mr-3"
+                />
+                <label htmlFor="anonymized" className="text-gray-300 text-sm">
+                  <span className="font-medium">启用匿名化处理</span>
+                  <div className="text-gray-500 text-xs mt-1">
+                    隐藏设备信息和随机化会话ID，保护你的隐私
+                  </div>
+                </label>
+              </div>
+
+              <div className="flex items-start">
+                <input
+                  type="checkbox"
+                  id="analytics"
+                  checked={analyticsConsent}
+                  onChange={(e) => setAnalyticsConsent(e.target.checked)}
+                  className="mt-1 mr-3"
+                />
+                <label htmlFor="analytics" className="text-gray-300 text-sm">
+                  <span className="font-medium">同意数据收集</span>
+                  <div className="text-gray-500 text-xs mt-1">
+                    允许匿名收集测试结果，帮助我们改进推荐算法
+                  </div>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex space-x-3">
+            <button
+              onClick={() => handlePrivacyConsent(analyticsConsent, dataAnonymized)}
+              className="flex-1 py-3 rounded-xl bg-gradient-to-r from-cyan-600 to-purple-700 text-white font-medium"
+            >
+              确认设置
+            </button>
+            <button
+              onClick={() => handlePrivacyConsent(false, true)}
+              className="flex-1 py-3 rounded-xl bg-gray-800/50 border border-gray-700 text-gray-300 font-medium"
+            >
+              仅必要功能
+            </button>
+          </div>
+
+          <div className="mt-4 pt-4 border-t border-gray-700/50 text-center text-xs text-gray-500">
+            <p>
+              详细隐私政策请查看{' '}
+              <button className="text-cyan-400 hover:text-cyan-300">
+                隐私条款
+              </button>
+            </p>
+          </div>
+        </motion.div>
+      </motion.div>
+    );
   };
 
   // 获取推荐结果
@@ -276,7 +436,28 @@ function App() {
         {/* 底部信息 */}
         <footer className="mt-8 text-center text-xs text-gray-500">
           <p>© 2024 职场性格盲盒 • 仅供娱乐</p>
+          <div className="mt-2 flex justify-center space-x-4">
+            <button
+              onClick={() => setShowPrivacyConsent(true)}
+              className="text-gray-500 hover:text-cyan-400 transition-colors"
+            >
+              隐私设置
+            </button>
+            <span className="text-gray-700">•</span>
+            <button className="text-gray-500 hover:text-cyan-400 transition-colors">
+              使用条款
+            </button>
+          </div>
+          {isLoggingData && (
+            <div className="mt-2 text-gray-600">
+              <span className="inline-block animate-spin mr-1">⏳</span>
+              正在匿名记录数据...
+            </div>
+          )}
         </footer>
+
+        {/* 隐私设置弹窗 */}
+        {renderPrivacyConsent()}
       </div>
     </div>
   );

@@ -7,9 +7,21 @@
       "config": {
         "distDir": "dist"
       }
+    },
+    {
+      "src": "api/analytics/log.ts",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "api/analytics/stats.ts",
+      "use": "@vercel/node"
     }
   ],
   "routes": [
+    {
+      "src": "/api/analytics/(.*)",
+      "dest": "/api/analytics/$1"
+    },
     {
       "src": "/assets/(.*)",
       "headers": {
@@ -25,6 +37,9 @@
     "silent": true
   },
   "env": {
-    "VITE_APP_TITLE": "职场性格盲盒"
+    "VITE_APP_TITLE": "职场性格盲盒",
+    "VITE_API_URL": "",
+    "VITE_ANALYTICS_ENABLED": "true",
+    "VITE_ANALYTICS_DEFAULT_ANONYMIZE": "true"
   }
 }
