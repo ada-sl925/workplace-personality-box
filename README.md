@@ -64,6 +64,53 @@ npm run build
 npm run preview
 ```
 
+## Vercel 部署
+
+### 方法一：通过 Vercel CLI（推荐）
+
+1. 安装 Vercel CLI：
+```bash
+npm i -g vercel
+```
+
+2. 登录 Vercel：
+```bash
+vercel login
+```
+
+3. 部署项目：
+```bash
+vercel
+```
+
+4. 生产环境部署：
+```bash
+vercel --prod
+```
+
+### 方法二：通过 GitHub 集成
+
+1. 将代码推送到 GitHub 仓库
+2. 访问 [vercel.com](https://vercel.com)
+3. 点击 "New Project"，导入你的 GitHub 仓库
+4. Vercel 会自动检测并配置项目
+5. 每次推送到 main 分支会自动部署
+
+### 方法三：通过网页直接上传
+
+1. 访问 [vercel.com](https://vercel.com)
+2. 点击 "New Project" > "Import Git Repository"
+3. 或者直接拖拽项目文件夹到网页
+
+### 部署配置
+
+- 项目已包含 `vercel.json` 配置文件
+- 构建命令：`npm run build`
+- 输出目录：`dist`
+- 路由配置：单页应用（SPA）友好
+
+部署完成后，你会获得一个类似 `https://workplace-personality-box.vercel.app` 的永久链接。
+
 ## 设计特点
 
 ### 交互设计
