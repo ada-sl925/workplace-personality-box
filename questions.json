@@ -1,0 +1,262 @@
+[
+  {
+    "id": 1,
+    "question": "周一早上，你发现同事把你负责的项目汇报搞砸了，此时你会：",
+    "options": [
+      {
+        "id": "A",
+        "text": "立刻找他理论，指出错误并要求他道歉",
+        "type": "dominant"
+      },
+      {
+        "id": "B",
+        "text": "默默把报告重写一遍，不声张但心里记一笔",
+        "type": "conscientious"
+      },
+      {
+        "id": "C",
+        "text": "笑着安慰同事‘没事没事’，然后自己加班补救",
+        "type": "agreeable"
+      },
+      {
+        "id": "D",
+        "text": "直接向老板汇报真实情况，建议调整分工",
+        "type": "analytical"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "question": "团队头脑风暴时，你的角色通常是：",
+    "options": [
+      {
+        "id": "A",
+        "text": "第一个抛出想法，哪怕它听起来很疯狂",
+        "type": "creative"
+      },
+      {
+        "id": "B",
+        "text": "在白板上整理大家的点子，画出逻辑图",
+        "type": "organizer"
+      },
+      {
+        "id": "C",
+        "text": "鼓励沉默的同事发言，调和不同意见",
+        "type": "mediator"
+      },
+      {
+        "id": "D",
+        "text": "追问每个点子的可行性、成本和风险",
+        "type": "critical"
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "question": "老板突然丢给你一个紧急任务，但手头工作已满，你会：",
+    "options": [
+      {
+        "id": "A",
+        "text": "接下任务，通宵也要搞定，证明自己的能力",
+        "type": "achiever"
+      },
+      {
+        "id": "B",
+        "text": "列出当前工作优先级，请老板决策哪些可以延后",
+        "type": "strategic"
+      },
+      {
+        "id": "C",
+        "text": "找同事帮忙分担一些，承诺下次请喝奶茶",
+        "type": "collaborative"
+      },
+      {
+        "id": "D",
+        "text": "评估任务真的那么急吗？和老板商量更合理的 deadline",
+        "type": "realistic"
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "question": "公司年会上，你更倾向于：",
+    "options": [
+      {
+        "id": "A",
+        "text": "上台表演节目，成为全场焦点",
+        "type": "expressive"
+      },
+      {
+        "id": "B",
+        "text": "帮忙布置场地、调试设备，确保流程顺利",
+        "type": "supportive"
+      },
+      {
+        "id": "C",
+        "text": "和不同部门的同事social，扩展人脉",
+        "type": "networker"
+      },
+      {
+        "id": "D",
+        "text": "找个角落安静吃饭，提前离场",
+        "type": "reserved"
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "question": "面对一个全新的陌生领域任务，你第一反应是：",
+    "options": [
+      {
+        "id": "A",
+        "text": "兴奋！终于可以学习新东西了",
+        "type": "learner"
+      },
+      {
+        "id": "B",
+        "text": "立刻搜索资料、制定学习计划",
+        "type": "planner"
+      },
+      {
+        "id": "C",
+        "text": "找相关领域的专家请教，快速获取经验",
+        "type": "consultative"
+      },
+      {
+        "id": "D",
+        "text": "评估自己需要多少时间才能达到合格水平",
+        "type": "cautious"
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "question": "同事总在会议上重复你已经说过的观点，你会：",
+    "options": [
+      {
+        "id": "A",
+        "text": "当场打断，‘这个我刚才已经说过了’",
+        "type": "assertive"
+      },
+      {
+        "id": "B",
+        "text": "会后私下提醒他注意倾听",
+        "type": "diplomatic"
+      },
+      {
+        "id": "C",
+        "text": "算了，可能他没听到，再说一遍也无妨",
+        "type": "tolerant"
+      },
+      {
+        "id": "D",
+        "text": "记录下这种情况发生的频率，分析原因",
+        "type": "observant"
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "question": "项目遇到意料之外的技术难题，deadline迫近，你会：",
+    "options": [
+      {
+        "id": "A",
+        "text": "尝试各种hack方案，先让功能跑起来再说",
+        "type": "pragmatic"
+      },
+      {
+        "id": "B",
+        "text": "通读官方文档和源码，寻找标准解决方案",
+        "type": "thorough"
+      },
+      {
+        "id": "C",
+        "text": "在技术社区发帖求助，集思广益",
+        "type": "community"
+      },
+      {
+        "id": "D",
+        "text": "汇报风险，建议调整项目范围或时间线",
+        "type": "risk_aware"
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "question": "你理想的工作环境是：",
+    "options": [
+      {
+        "id": "A",
+        "text": "自由、弹性，可以穿着睡衣办公",
+        "type": "flexible"
+      },
+      {
+        "id": "B",
+        "text": "规范、流程清晰，每个人职责明确",
+        "type": "structured"
+      },
+      {
+        "id": "C",
+        "text": "团队氛围好，同事像朋友一样",
+        "type": "social"
+      },
+      {
+        "id": "D",
+        "text": "安静、独立，不被频繁打扰",
+        "type": "focused"
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "question": "收到负面反馈时，你的内心活动是：",
+    "options": [
+      {
+        "id": "A",
+        "text": "不服，觉得对方不懂或针对自己",
+        "type": "defensive"
+      },
+      {
+        "id": "B",
+        "text": "仔细分析反馈的合理性，制定改进计划",
+        "type": "improvement"
+      },
+      {
+        "id": "C",
+        "text": "难过，担心对方对自己有看法",
+        "type": "sensitive"
+      },
+      {
+        "id": "D",
+        "text": "追问具体案例和数据，确保理解准确",
+        "type": "factual"
+      }
+    ]
+  },
+  {
+    "id": 10,
+    "question": "五年后，你希望自己在职场中成为：",
+    "options": [
+      {
+        "id": "A",
+        "text": "带领团队冲锋陷阵的领导者",
+        "type": "leader"
+      },
+      {
+        "id": "B",
+        "text": "某个技术/业务领域的顶尖专家",
+        "type": "expert"
+      },
+      {
+        "id": "C",
+        "text": "连接各部门、润滑协作的关键人物",
+        "type": "connector"
+      },
+      {
+        "id": "D",
+        "text": "拥有自己独立工作室的自由职业者",
+        "type": "independent"
+      }
+    ]
+  }
+]

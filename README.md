@@ -1,0 +1,124 @@
+# 职场性格盲盒
+
+一个移动端优先的 Web 应用，通过 10 道有趣的职场情景选择题，为用户生成个性化岗位推荐和毒舌 AI 评价。
+
+## 功能特点
+
+- 🎯 **移动端优先设计**：针对移动设备优化的交互体验
+- 🃏 **卡片流模式**：深色背景 + 亮色渐变按钮的视觉风格
+- ✨ **丝滑动画**：使用 Framer Motion 实现卡片向左滑出/进入的过渡效果
+- 🧠 **智能推荐**：根据用户选择计算性格特质，推荐最适合的岗位
+- 😈 **毒舌 AI 评价**：幽默风趣但一针见血的岗位评价
+- 📱 **响应式设计**：适配各种屏幕尺寸
+
+## 技术栈
+
+- **React 18** - 前端框架
+- **TypeScript** - 类型安全
+- **Tailwind CSS** - 实用优先的 CSS 框架
+- **Framer Motion** - 动画库
+- **Vite** - 构建工具
+
+## 项目结构
+
+```
+├── src/
+│   ├── components/      # React 组件
+│   ├── types/          # TypeScript 类型定义
+│   ├── hooks/          # 自定义 Hooks
+│   ├── App.tsx         # 主应用组件
+│   └── index.tsx       # 应用入口
+├── questions.json      # 10 道职场情景题
+├── results.ts          # 岗位推荐逻辑
+├── tailwind.config.js  # Tailwind 配置
+└── vite.config.ts      # Vite 配置
+```
+
+## 快速开始
+
+### 1. 安装依赖
+
+```bash
+npm install
+```
+
+### 2. 启动开发服务器
+
+```bash
+npm run dev
+```
+
+应用将在 [http://localhost:3000](http://localhost:3000) 启动。
+
+### 3. 构建生产版本
+
+```bash
+npm run build
+```
+
+构建产物位于 `dist` 目录。
+
+### 4. 预览生产版本
+
+```bash
+npm run preview
+```
+
+## 设计特点
+
+### 交互设计
+- 每答完一题，当前卡片向左滑出，下一题从右侧进入
+- 支持返回上一题修改答案
+- 进度条实时显示答题进度
+
+### 视觉设计
+- 深色背景 (`from-gray-900 to-black`)
+- 渐变按钮 (`from-cyan-500 to-purple-600`)
+- 毛玻璃效果卡片
+- 圆角设计 + 阴影层次
+
+### 动画效果
+- 使用 Framer Motion 的 `AnimatePresence` 管理组件过渡
+- 弹簧物理动画提供自然感
+- 悬停状态微交互
+
+## 性格评估逻辑
+
+应用包含 10 道职场情景题，每道题有 4 个选项，对应不同的性格特质：
+
+1. **支配型** (dominant, leader, assertive) - 项目管理、领导岗位
+2. **严谨型** (conscientious, analytical, thorough) - 数据分析、质量管控
+3. **亲和型** (agreeable, mediator, collaborative) - HR、客户关系
+4. **创意型** (creative, expressive, flexible) - 产品、市场、创意岗位
+5. **规划型** (organizer, planner, strategic) - 运营、项目管理
+6. **社交型** (networker, connector, social) - 商务拓展、公关
+7. **独立型** (reserved, focused, independent) - 技术研发、自由职业
+
+系统统计用户选择的性格特质，推荐出现频率最高的类型对应的岗位。
+
+## 定制开发
+
+### 修改题目
+编辑 `questions.json` 文件：
+- 修改现有题目内容
+- 添加/删除题目（需同步调整类型映射）
+- 调整选项对应的性格特质
+
+### 修改岗位推荐
+编辑 `results.ts` 文件：
+- 调整 `personalityResults` 映射中的岗位名称和描述
+- 修改 `recommendPosition` 函数中的推荐逻辑
+- 添加新的性格类型和对应岗位
+
+### 修改样式
+- 颜色主题：修改 `tailwind.config.js` 中的渐变色值
+- 布局调整：直接编辑 `App.tsx` 中的 Tailwind 类名
+- 动画参数：调整 `cardVariants` 和 `resultVariants` 中的动画参数
+
+## 许可证
+
+MIT
+
+## 贡献
+
+欢迎提交 Issue 和 Pull Request！
