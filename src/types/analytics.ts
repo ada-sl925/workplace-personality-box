@@ -22,10 +22,12 @@ export interface TestResultData {
 
   // 设备信息（可选）
   deviceInfo?: {
-    userAgent: string;
+    userAgent?: string;
     screenWidth: number;
     screenHeight: number;
     language: string;
+    platform?: string;
+    timezone?: string;
   };
 
   // 隐私设置

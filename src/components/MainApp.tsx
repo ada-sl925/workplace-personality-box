@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import questions from '../questions.json';
-import { recommendPosition } from '../results';
-import { logTestResult } from './utils/analytics';
-import type { Question, UserAnswer } from './types';
+import { Link } from 'react-router-dom';
+import questions from '../../questions.json';
+import { recommendPosition } from '../../results';
+import { logTestResult } from '../utils/analytics';
+import type { Question, UserAnswer } from '../types';
 
-function App() {
+export default function MainApp() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [userAnswers, setUserAnswers] = useState<UserAnswer[]>([]);
   const [showResult, setShowResult] = useState(false);
@@ -132,6 +133,57 @@ function App() {
     }
   };
 
+  // 获取推荐结果
+  const getResult = () => {
+    const selectedTypes = userAnswers.map(answer => answer.optionType);
+    return recommendPosition(selectedTypes);
+  };
+
+  // 计算进度
+  const progress = ((currentQuestionIndex + 1) / totalQuestions) * 100;
+
+  // 动画变体
+  const cardVariants = {
+    enter: (direction: 'left' | 'right') => ({
+      x: direction === 'left' ? 300 : -300,
+      opacity: 0,
+      scale: 0.9
+    }),
+    center: {
+      x: 0,
+      opacity: 1,
+      scale: 1,
+      transition: {
+        type: "spring",
+        stiffness: 300,
+        damping: 25
+      }
+    },
+    exit: (direction: 'left' | 'right') => ({
+      x: direction === 'left' ? -300 : 300,
+      opacity: 0,
+      scale: 0.9,
+      transition: {
+        duration: 0.3
+      }
+    })
+  };
+
+  // 结果页动画
+  const resultVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+        damping: 15,
+        delay: 0.2
+      }
+    }
+  };
+
   // 隐私设置弹窗
   const renderPrivacyConsent = () => {
     if (!showPrivacyConsent) return null;
@@ -217,57 +269,6 @@ function App() {
         </motion.div>
       </motion.div>
     );
-  };
-
-  // 获取推荐结果
-  const getResult = () => {
-    const selectedTypes = userAnswers.map(answer => answer.optionType);
-    return recommendPosition(selectedTypes);
-  };
-
-  // 计算进度
-  const progress = ((currentQuestionIndex + 1) / totalQuestions) * 100;
-
-  // 动画变体
-  const cardVariants = {
-    enter: (direction: 'left' | 'right') => ({
-      x: direction === 'left' ? 300 : -300,
-      opacity: 0,
-      scale: 0.9
-    }),
-    center: {
-      x: 0,
-      opacity: 1,
-      scale: 1,
-      transition: {
-        type: "spring",
-        stiffness: 300,
-        damping: 25
-      }
-    },
-    exit: (direction: 'left' | 'right') => ({
-      x: direction === 'left' ? -300 : 300,
-      opacity: 0,
-      scale: 0.9,
-      transition: {
-        duration: 0.3
-      }
-    })
-  };
-
-  // 结果页动画
-  const resultVariants = {
-    hidden: { opacity: 0, y: 50 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        type: "spring",
-        stiffness: 100,
-        damping: 15,
-        delay: 0.2
-      }
-    }
   };
 
   return (
@@ -444,6 +445,13 @@ function App() {
               隐私设置
             </button>
             <span className="text-gray-700">•</span>
+            <Link
+              to="/analytics"
+              className="text-gray-500 hover:text-cyan-400 transition-colors"
+            >
+              数据分析
+            </Link>
+            <span className="text-gray-700">•</span>
             <button className="text-gray-500 hover:text-cyan-400 transition-colors">
               使用条款
             </button>
@@ -462,5 +470,3 @@ function App() {
     </div>
   );
 }
-
-export default App;

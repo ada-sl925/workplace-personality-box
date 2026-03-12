@@ -2,7 +2,41 @@ import { VercelRequest, VercelResponse } from '@vercel/node';
 import type { TestResultData, AnalyticsResponse } from '../../src/types/analytics';
 
 // 简单的内存存储（仅用于演示，生产环境需要持久化存储）
-const testResults: TestResultData[] = [];
+// 注意：在 Serverless Functions 中，每次请求都是独立的，这个数组不会持久化
+// 在实际部署中，需要使用数据库（如 Supabase、MongoDB 等）
+let testResults: TestResultData[] = [];
+
+// 如果启用了文件存储，尝试从文件加载数据
+async function loadDataFromFile() {
+  try {
+    if (process.env.USE_FILE_STORAGE === 'true') {
+      const fs = await import('fs/promises');
+      const data = await fs.readFile('/tmp/analytics-data.json', 'utf-8');
+      testResults = JSON.parse(data);
+      console.log(`📂 从文件加载了 ${testResults.length} 条测试数据`);
+    }
+  } catch (error) {
+    // 文件不存在是正常的
+    if ((error as any).code !== 'ENOENT') {
+      console.warn('Failed to load data from file:', error);
+    }
+  }
+}
+
+// 保存数据到文件（如果启用了文件存储）
+async function saveDataToFile() {
+  try {
+    if (process.env.USE_FILE_STORAGE === 'true') {
+      const fs = await import('fs/promises');
+      await fs.writeFile('/tmp/analytics-data.json', JSON.stringify(testResults, null, 2));
+    }
+  } catch (error) {
+    console.warn('Failed to save data to file:', error);
+  }
+}
+
+// 初始化时加载数据
+loadDataFromFile();
 
 export default async function handler(
   request: VercelRequest,
@@ -57,26 +91,41 @@ export default async function handler(
       })
     };
 
-    // 存储数据（这里使用内存，生产环境应使用数据库）
-    testResults.push(processedData);
+    // 尝试存储到数据库（如 Supabase）
+    const storedInDatabase = await sendToAnalyticsServices(processedData);
 
-    // 限制存储数量，避免内存泄漏
-    if (testResults.length > 1000) {
-      testResults.shift();
+    // 如果数据库存储失败或未配置，使用内存存储作为备选
+    if (!storedInDatabase) {
+      // 存储数据到内存（备选方案）
+      testResults.push(processedData);
+
+      // 限制存储数量，避免内存泄漏
+      if (testResults.length > 1000) {
+        testResults.shift();
+      }
+
+      // 保存到文件（如果启用了文件存储）
+      await saveDataToFile();
+
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('📊 Test result stored in memory (database not available):', {
+          sessionId: processedData.sessionId,
+          recommendation: processedData.recommendation.title,
+          answersCount: processedData.answers.length,
+          timestamp: processedData.timestamp
+        });
+      }
+    } else {
+      // 数据库存储成功
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('📊 Test result stored in database:', {
+          sessionId: processedData.sessionId,
+          recommendation: processedData.recommendation.title,
+          answersCount: processedData.answers.length,
+          timestamp: processedData.timestamp
+        });
+      }
     }
-
-    // 记录到控制台（开发环境）
-    if (process.env.NODE_ENV !== 'production') {
-      console.log('📊 Test result logged:', {
-        sessionId: processedData.sessionId,
-        recommendation: processedData.recommendation.title,
-        answersCount: processedData.answers.length,
-        timestamp: processedData.timestamp
-      });
-    }
-
-    // 可选：发送到其他分析服务
-    await sendToAnalyticsServices(processedData);
 
     const result: AnalyticsResponse = {
       success: true,
@@ -108,29 +157,48 @@ function hashString(str: string): string {
 }
 
 // 发送到其他分析服务（可扩展）
-async function sendToAnalyticsServices(data: TestResultData): Promise<void> {
+// 返回是否成功存储到主数据库（Supabase）
+async function sendToAnalyticsServices(data: TestResultData): Promise<boolean> {
   const services = [];
+  let hasDatabaseStorage = false;
+  let databaseService: Promise<boolean> | null = null;
 
-  // Google Analytics 4（如果配置了GA4测量ID）
+  // Supabase（如果配置了）- 主数据库存储
+  if (process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    hasDatabaseStorage = true;
+    databaseService = sendToSupabase(data);
+    services.push(databaseService);
+  }
+
+  // Google Analytics 4（如果配置了GA4测量ID）- 辅助分析服务
   if (process.env.GA4_MEASUREMENT_ID && process.env.GA4_API_SECRET) {
     services.push(sendToGoogleAnalytics(data));
   }
 
-  // 自定义Webhook（如果配置了）
+  // 自定义Webhook（如果配置了）- 辅助分析服务
   if (process.env.ANALYTICS_WEBHOOK_URL) {
     services.push(sendToWebhook(data));
   }
 
-  // Supabase（如果配置了）
-  if (process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY) {
-    services.push(sendToSupabase(data));
+  // 并行发送到所有服务
+  const results = await Promise.allSettled(services);
+
+  // 检查主数据库存储是否成功
+  if (hasDatabaseStorage && databaseService) {
+    const index = services.indexOf(databaseService);
+    const result = results[index];
+    if (result.status === 'fulfilled' && result.value === true) {
+      return true; // 数据库存储成功
+    }
+    console.warn('主数据库存储失败，将使用内存存储作为备选');
+    return false;
   }
 
-  // 并行发送到所有服务
-  await Promise.allSettled(services);
+  // 如果没有配置数据库存储，返回false表示需要内存存储
+  return false;
 }
 
-async function sendToGoogleAnalytics(data: TestResultData): Promise<void> {
+async function sendToGoogleAnalytics(data: TestResultData): Promise<boolean> {
   try {
     const measurementId = process.env.GA4_MEASUREMENT_ID;
     const apiSecret = process.env.GA4_API_SECRET;
@@ -158,13 +226,16 @@ async function sendToGoogleAnalytics(data: TestResultData): Promise<void> {
 
     if (!response.ok) {
       console.warn('Failed to send to Google Analytics:', response.status);
+      return false;
     }
+    return true;
   } catch (error) {
     console.warn('Error sending to Google Analytics:', error);
+    return false;
   }
 }
 
-async function sendToWebhook(data: TestResultData): Promise<void> {
+async function sendToWebhook(data: TestResultData): Promise<boolean> {
   try {
     const webhookUrl = process.env.ANALYTICS_WEBHOOK_URL;
 
@@ -176,22 +247,31 @@ async function sendToWebhook(data: TestResultData): Promise<void> {
 
     if (!response.ok) {
       console.warn('Failed to send to webhook:', response.status);
+      return false;
     }
+    return true;
   } catch (error) {
     console.warn('Error sending to webhook:', error);
+    return false;
   }
 }
 
-async function sendToSupabase(data: TestResultData): Promise<void> {
+async function sendToSupabase(data: TestResultData): Promise<boolean> {
   try {
     const supabaseUrl = process.env.SUPABASE_URL;
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+    // 检查 Supabase 配置是否存在
+    if (!supabaseUrl || !supabaseKey) {
+      console.log('Supabase 配置未设置，跳过数据库存储');
+      return false;
+    }
 
     const response = await fetch(`${supabaseUrl}/rest/v1/test_results`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'apikey': supabaseKey!,
+        'apikey': supabaseKey,
         'Authorization': `Bearer ${supabaseKey}`
       },
       body: JSON.stringify({
@@ -208,8 +288,13 @@ async function sendToSupabase(data: TestResultData): Promise<void> {
 
     if (!response.ok) {
       console.warn('Failed to send to Supabase:', response.status);
+      return false;
     }
+
+    console.log('✅ 数据已存储到 Supabase');
+    return true;
   } catch (error) {
     console.warn('Error sending to Supabase:', error);
+    return false;
   }
 }

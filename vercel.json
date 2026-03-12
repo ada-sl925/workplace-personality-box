@@ -15,6 +15,10 @@
     {
       "src": "api/analytics/stats.ts",
       "use": "@vercel/node"
+    },
+    {
+      "src": "api/analytics/data.ts",
+      "use": "@vercel/node"
     }
   ],
   "routes": [
