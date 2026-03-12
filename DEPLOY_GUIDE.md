@@ -1,4 +1,4 @@
-# 🚀 职场性格盲盒 - 一键部署指南
+# 🚀 Vibe Check：职场人格盲盒 - 一键部署指南
 
 本指南将帮助你快速将应用部署到 Vercel，获得永久在线的公开访问链接。
 
@@ -17,7 +17,7 @@
 1. 访问 [github.com/new](https://github.com/new)
 2. 填写仓库信息：
    - **Repository name**: `workplace-personality-box`（或自定义名称）
-   - **Description**: 职场性格盲盒 - 移动端优先的Web应用
+   - **Description**: Vibe Check：职场人格盲盒 - 移动端优先的Web应用
    - 选择 **Public**（公开）
    - 不勾选"Initialize this repository with a README"（项目已有README）
 3. 点击 **Create repository**

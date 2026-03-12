@@ -276,10 +276,10 @@ function App() {
         {/* 顶部标题和进度条 */}
         <header className="mb-8">
           <h1 className="text-2xl md:text-3xl font-bold text-center mb-2 bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">
-            职场性格盲盒
+            Vibe Check：职场人格盲盒
           </h1>
           <p className="text-gray-400 text-center text-sm mb-4">
-            回答10道题，解锁你的专属岗位推荐
+            回答{totalQuestions}道题，解锁你的专属岗位推荐
           </p>
 
           {/* 进度条 */}
@@ -435,7 +435,7 @@ function App() {
 
         {/* 底部信息 */}
         <footer className="mt-8 text-center text-xs text-gray-500">
-          <p>© 2024 职场性格盲盒 • 仅供娱乐</p>
+          <p>© 2026 Vibe Check：职场人格盲盒 • 仅供娱乐</p>
           <div className="mt-2 flex justify-center space-x-4">
             <button
               onClick={() => setShowPrivacyConsent(true)}

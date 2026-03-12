@@ -120,7 +120,7 @@ export default function AnalyticsDashboard() {
     const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.download = `职场性格盲盒数据_${new Date().toISOString().split('T')[0]}.csv`;
+    link.download = `Vibe Check：职场人格盲盒数据_${new Date().toISOString().split('T')[0]}.csv`;
     link.click();
   };
 
@@ -150,7 +150,7 @@ export default function AnalyticsDashboard() {
                 数据分析仪表板
               </h1>
               <p className="text-gray-400 text-sm">
-                实时查看职场性格盲盒的匿名测试数据
+                实时查看Vibe Check：职场人格盲盒的匿名测试数据
               </p>
             </div>
 
@@ -495,7 +495,7 @@ export default function AnalyticsDashboard() {
 
         {/* 底部信息 */}
         <footer className="mt-8 text-center text-xs text-gray-500">
-          <p>© 2024 职场性格盲盒 • 数据分析仪表板 • 数据每60秒自动缓存</p>
+          <p>© 2026 Vibe Check：职场人格盲盒 • 数据分析仪表板 • 数据每60秒自动缓存</p>
           <p className="mt-1">
             提示：所有数据均已匿名化处理，不包含任何个人身份信息
           </p>

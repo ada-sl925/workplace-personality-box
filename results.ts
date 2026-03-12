@@ -134,6 +134,100 @@ export const personalityResults = {
     title: "风控专员/合规官",
     description: "看到机会第一反应是风险，想到收益马上计算成本。你是公司的刹车片，虽然有时候刹得太急。",
     emoji: "⚠️"
+  },
+
+  // 新增技术能力型
+  competent: {
+    title: "全栈工程师/技术主管",
+    description: "技术栈丰富，能独立搞定前后端。你是团队的技术支柱，但小心别变成永远的救火队员。",
+    emoji: "⚡"
+  },
+  expert: {
+    title: "首席技术官/架构师",
+    description: "技术深度和广度都令人敬畏，能设计支撑百万用户的系统。只是有时候你讲的原理没人听得懂。",
+    emoji: "🏆"
+  },
+  organized: {
+    title: "流程优化专员/运营专员",
+    description: "能把混乱的流程梳理得井井有条，效率提升专家。但请接受世界上总有些人不按流程办事。",
+    emoji: "📈"
+  },
+
+  // 其他现有问题中的类型
+  critical: {
+    title: "质量测试/代码审查",
+    description: "眼光毒辣，总能发现别人忽略的问题。你是产品的守门人，但请对新手程序员温柔一点。",
+    emoji: "🔎"
+  },
+  realistic: {
+    title: "产品经理/需求分析师",
+    description: "务实派，知道理想和现实的差距。能在资源限制下找到最优解，但偶尔会被吐槽缺乏想象力。",
+    emoji: "🎯"
+  },
+  achiever: {
+    title: "销售冠军/业务拓展",
+    description: "目标驱动，业绩导向。为了达成KPI可以拼尽全力，只是有时候会忽略团队合作。",
+    emoji: "🏅"
+  },
+  community: {
+    title: "开源社区经理/技术布道师",
+    description: "热爱分享，擅长构建技术社区。你能把冷门技术讲得火热，但别忘了公司的KPI也要完成。",
+    emoji: "🌐"
+  },
+  structured: {
+    title: "系统管理员/IT运维",
+    description: "喜欢一切都井井有条，服务器配置、网络拓扑都要规范清晰。混乱是你的天敌。",
+    emoji: "🖥️"
+  },
+  supportive: {
+    title: "团队助理/行政支持",
+    description: "默默支持团队运转，确保大家没有后顾之忧。你是团队的润滑剂，只是功劳常常被忽略。",
+    emoji: "🤲"
+  },
+  consultative: {
+    title: "咨询顾问/解决方案架构师",
+    description: "善于借鉴外部经验，快速找到最佳实践。客户信任你的专业建议，但方案落地可能需要更多细节。",
+    emoji: "💼"
+  },
+  cautious: {
+    title: "安全工程师/合规审核",
+    description: "谨慎小心，凡事考虑最坏情况。你是公司的安全网，但有时候过度谨慎会错失机会。",
+    emoji: "🛡️"
+  },
+  diplomatic: {
+    title: "外交官/政府关系",
+    description: "说话得体，处事圆滑，能在复杂关系中游刃有余。适合处理敏感事务，但小心别失去原则。",
+    emoji: "🕊️"
+  },
+  tolerant: {
+    title: "客户服务/用户支持",
+    description: "耐心十足，能忍受各种不合理要求。你是公司的形象代言人，但别让用户的负能量影响自己。",
+    emoji: "😊"
+  },
+  observant: {
+    title: "市场研究员/用户研究",
+    description: "观察入微，能从细节中发现趋势。你的洞察力能指导产品方向，但数据需要结合人性理解。",
+    emoji: "👀"
+  },
+  defensive: {
+    title: "法务顾问/合规专员",
+    description: "善于保护自己和团队，规避法律风险。你是公司的防护盾，但别让防御心态阻碍创新。",
+    emoji: "⚖️"
+  },
+  improvement: {
+    title: "流程改进工程师/精益专家",
+    description: "永不满足现状，总能找到优化点。持续改进是你的信仰，但别为了优化而优化。",
+    emoji: "🔄"
+  },
+  sensitive: {
+    title: "心理咨询师/员工关怀",
+    description: "情感细腻，能察觉他人情绪变化。适合做员工关怀工作，但记得也要照顾好自己的情绪。",
+    emoji: "💖"
+  },
+  factual: {
+    title: "技术文档工程师/数据管理员",
+    description: "注重事实和证据，讨厌模糊表述。你能确保信息的准确性和一致性，但创意讨论需要一些弹性。",
+    emoji: "📄"
   }
 };
 

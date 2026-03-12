@@ -1,6 +1,32 @@
 [
   {
     "id": 1,
+    "question": "你的专业背景更偏向以下哪个方向？",
+    "options": [
+      {
+        "id": "A",
+        "text": "文科（语言、历史、哲学、艺术等）",
+        "type": "creative"
+      },
+      {
+        "id": "B",
+        "text": "理科（数学、物理、化学、生物等）",
+        "type": "analytical"
+      },
+      {
+        "id": "C",
+        "text": "工科（计算机、工程、机械、建筑等）",
+        "type": "pragmatic"
+      },
+      {
+        "id": "D",
+        "text": "商科（经济、管理、金融、营销等）",
+        "type": "strategic"
+      }
+    ]
+  },
+  {
+    "id": 2,
     "question": "周一早上，你发现同事把你负责的项目汇报搞砸了，此时你会：",
     "options": [
       {
@@ -26,7 +52,33 @@
     ]
   },
   {
-    "id": 2,
+    "id": 3,
+    "question": "你的编程能力处于什么水平？",
+    "options": [
+      {
+        "id": "A",
+        "text": "不会写代码，但愿意学习",
+        "type": "learner"
+      },
+      {
+        "id": "B",
+        "text": "会基础语法，能写简单脚本完成任务",
+        "type": "pragmatic"
+      },
+      {
+        "id": "C",
+        "text": "熟练掌握一门语言，能独立开发完整项目",
+        "type": "competent"
+      },
+      {
+        "id": "D",
+        "text": "精通多种技术栈，能设计复杂系统架构",
+        "type": "expert"
+      }
+    ]
+  },
+  {
+    "id": 4,
     "question": "团队头脑风暴时，你的角色通常是：",
     "options": [
       {
@@ -52,7 +104,33 @@
     ]
   },
   {
-    "id": 3,
+    "id": 5,
+    "question": "你在团队中的沟通风格更接近：",
+    "options": [
+      {
+        "id": "A",
+        "text": "倾向于书面沟通，表达简洁清晰",
+        "type": "reserved"
+      },
+      {
+        "id": "B",
+        "text": "能清晰表达想法，促进团队讨论",
+        "type": "expressive"
+      },
+      {
+        "id": "C",
+        "text": "擅长公开演讲和说服他人",
+        "type": "assertive"
+      },
+      {
+        "id": "D",
+        "text": "善于倾听和调解不同观点之间的冲突",
+        "type": "mediator"
+      }
+    ]
+  },
+  {
+    "id": 6,
     "question": "老板突然丢给你一个紧急任务，但手头工作已满，你会：",
     "options": [
       {
@@ -78,85 +156,33 @@
     ]
   },
   {
-    "id": 4,
-    "question": "公司年会上，你更倾向于：",
+    "id": 7,
+    "question": "你处理复杂任务时的结构化能力如何？",
     "options": [
       {
         "id": "A",
-        "text": "上台表演节目，成为全场焦点",
-        "type": "expressive"
+        "text": "喜欢自由随性，讨厌条条框框",
+        "type": "flexible"
       },
       {
         "id": "B",
-        "text": "帮忙布置场地、调试设备，确保流程顺利",
-        "type": "supportive"
+        "text": "能按部就班执行既定流程",
+        "type": "organized"
       },
       {
         "id": "C",
-        "text": "和不同部门的同事social，扩展人脉",
-        "type": "networker"
-      },
-      {
-        "id": "D",
-        "text": "找个角落安静吃饭，提前离场",
-        "type": "reserved"
-      }
-    ]
-  },
-  {
-    "id": 5,
-    "question": "面对一个全新的陌生领域任务，你第一反应是：",
-    "options": [
-      {
-        "id": "A",
-        "text": "兴奋！终于可以学习新东西了",
-        "type": "learner"
-      },
-      {
-        "id": "B",
-        "text": "立刻搜索资料、制定学习计划",
+        "text": "擅长制定详细计划和里程碑",
         "type": "planner"
       },
       {
-        "id": "C",
-        "text": "找相关领域的专家请教，快速获取经验",
-        "type": "consultative"
-      },
-      {
         "id": "D",
-        "text": "评估自己需要多少时间才能达到合格水平",
-        "type": "cautious"
+        "text": "能设计复杂系统的整体架构和流程",
+        "type": "strategic"
       }
     ]
   },
   {
-    "id": 6,
-    "question": "同事总在会议上重复你已经说过的观点，你会：",
-    "options": [
-      {
-        "id": "A",
-        "text": "当场打断，‘这个我刚才已经说过了’",
-        "type": "assertive"
-      },
-      {
-        "id": "B",
-        "text": "会后私下提醒他注意倾听",
-        "type": "diplomatic"
-      },
-      {
-        "id": "C",
-        "text": "算了，可能他没听到，再说一遍也无妨",
-        "type": "tolerant"
-      },
-      {
-        "id": "D",
-        "text": "记录下这种情况发生的频率，分析原因",
-        "type": "observant"
-      }
-    ]
-  },
-  {
-    "id": 7,
+    "id": 8,
     "question": "项目遇到意料之外的技术难题，deadline迫近，你会：",
     "options": [
       {
@@ -182,54 +208,28 @@
     ]
   },
   {
-    "id": 8,
-    "question": "你理想的工作环境是：",
-    "options": [
-      {
-        "id": "A",
-        "text": "自由、弹性，可以穿着睡衣办公",
-        "type": "flexible"
-      },
-      {
-        "id": "B",
-        "text": "规范、流程清晰，每个人职责明确",
-        "type": "structured"
-      },
-      {
-        "id": "C",
-        "text": "团队氛围好，同事像朋友一样",
-        "type": "social"
-      },
-      {
-        "id": "D",
-        "text": "安静、独立，不被频繁打扰",
-        "type": "focused"
-      }
-    ]
-  },
-  {
     "id": 9,
-    "question": "收到负面反馈时，你的内心活动是：",
+    "question": "你的领导能力和倾向如何？",
     "options": [
       {
         "id": "A",
-        "text": "不服，觉得对方不懂或针对自己",
-        "type": "defensive"
+        "text": "更喜欢独立工作，对自己负责",
+        "type": "independent"
       },
       {
         "id": "B",
-        "text": "仔细分析反馈的合理性，制定改进计划",
-        "type": "improvement"
+        "text": "能带领小团队完成任务，协调分工",
+        "type": "collaborative"
       },
       {
         "id": "C",
-        "text": "难过，担心对方对自己有看法",
-        "type": "sensitive"
+        "text": "擅长激励团队，带领大家达成目标",
+        "type": "leader"
       },
       {
         "id": "D",
-        "text": "追问具体案例和数据，确保理解准确",
-        "type": "factual"
+        "text": "能制定战略方向，规划长期发展",
+        "type": "strategic"
       }
     ]
   },

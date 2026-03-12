@@ -41,7 +41,7 @@
     "silent": true
   },
   "env": {
-    "VITE_APP_TITLE": "职场性格盲盒",
+    "VITE_APP_TITLE": "Vibe Check：职场人格盲盒",
     "VITE_API_URL": "",
     "VITE_ANALYTICS_ENABLED": "true",
     "VITE_ANALYTICS_DEFAULT_ANONYMIZE": "true"
