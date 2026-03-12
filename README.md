@@ -2,6 +2,8 @@
 
 一个移动端优先的 Web 应用，通过 10 道有趣的职场情景选择题，为用户生成个性化岗位推荐和毒舌 AI 评价。
 
+网页link:https://workplace-personality-box.vercel.app/
+
 ## 功能特点
 
 - 🎯 **移动端优先设计**：针对移动设备优化的交互体验
