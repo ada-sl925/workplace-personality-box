@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import questions from '../../questions.json';
-import { recommendPosition } from '../../results';
+import { getCompleteResult } from '../../results';
 import { logTestResult } from '../utils/analytics';
 import type { Question, UserAnswer } from '../types';
 
@@ -44,7 +44,7 @@ export default function MainApp() {
 
     setIsLoggingData(true);
     try {
-      const result = getResult();
+      const result = getResult().position;
       await logTestResult(
         userAnswers.map(answer => ({
           questionId: answer.questionId,
@@ -136,7 +136,7 @@ export default function MainApp() {
   // 获取推荐结果
   const getResult = () => {
     const selectedTypes = userAnswers.map(answer => answer.optionType);
-    return recommendPosition(selectedTypes);
+    return getCompleteResult(selectedTypes);
   };
 
   // 计算进度
@@ -378,7 +378,7 @@ export default function MainApp() {
                   {/* 结果图标 */}
                   <div className="text-center mb-6">
                     <div className="w-20 h-20 mx-auto rounded-full bg-gradient-to-r from-cyan-500 to-purple-600 flex items-center justify-center text-3xl mb-4">
-                      {getResult().emoji}
+                      {getResult().position.emoji}
                     </div>
                     <div className="text-sm text-cyan-400 font-medium mb-1">
                       盲盒已开启
@@ -390,7 +390,60 @@ export default function MainApp() {
                   <div className="mb-8">
                     <div className="text-gray-400 text-sm mb-2">推荐岗位</div>
                     <div className="text-3xl font-bold bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">
-                      {getResult().title}
+                      {getResult().position.title}
+                    </div>
+                  </div>
+
+                  {/* MBTI人格类型 */}
+                  <div className="mb-8">
+                    <div className="text-gray-400 text-sm mb-2">职场MBTI人格</div>
+                    <div className="flex items-center justify-between p-4 bg-gray-900/30 rounded-xl border border-gray-700/50">
+                      <div>
+                        <div className="text-2xl font-bold bg-gradient-to-r from-amber-400 to-pink-500 bg-clip-text text-transparent">
+                          {getResult().mbti.type}
+                        </div>
+                        <div className="text-sm text-gray-300 mt-1">{getResult().mbti.title}</div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-xs text-gray-400 mb-1">人格特征</div>
+                        <div className="text-sm text-gray-300 max-w-[200px]">
+                          {getResult().mbti.description}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* MBTI维度判定 */}
+                    <div className="mt-4 p-3 bg-gray-900/20 rounded-lg border border-gray-700/30">
+                      <div className="text-xs text-gray-400 mb-2">维度判定</div>
+                      <div className="grid grid-cols-2 gap-2">
+                        <div className="flex justify-between items-center">
+                          <span className="text-xs text-gray-300">外向(E) vs 内向(I)</span>
+                          <span className={`text-xs font-medium ${getResult().mbti.dimensions.E > getResult().mbti.dimensions.I ? 'text-green-400' : 'text-blue-400'}`}>
+                            {getResult().mbti.dimensions.E > getResult().mbti.dimensions.I ? 'E' : 'I'} ({Math.max(getResult().mbti.dimensions.E, getResult().mbti.dimensions.I)}:{Math.min(getResult().mbti.dimensions.E, getResult().mbti.dimensions.I)})
+                          </span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-xs text-gray-300">感觉(S) vs 直觉(N)</span>
+                          <span className={`text-xs font-medium ${getResult().mbti.dimensions.S > getResult().mbti.dimensions.N ? 'text-green-400' : 'text-blue-400'}`}>
+                            {getResult().mbti.dimensions.S > getResult().mbti.dimensions.N ? 'S' : 'N'} ({Math.max(getResult().mbti.dimensions.S, getResult().mbti.dimensions.N)}:{Math.min(getResult().mbti.dimensions.S, getResult().mbti.dimensions.N)})
+                          </span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-xs text-gray-300">思考(T) vs 情感(F)</span>
+                          <span className={`text-xs font-medium ${getResult().mbti.dimensions.T > getResult().mbti.dimensions.F ? 'text-green-400' : 'text-blue-400'}`}>
+                            {getResult().mbti.dimensions.T > getResult().mbti.dimensions.F ? 'T' : 'F'} ({Math.max(getResult().mbti.dimensions.T, getResult().mbti.dimensions.F)}:{Math.min(getResult().mbti.dimensions.T, getResult().mbti.dimensions.F)})
+                          </span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-xs text-gray-300">判断(J) vs 感知(P)</span>
+                          <span className={`text-xs font-medium ${getResult().mbti.dimensions.J > getResult().mbti.dimensions.P ? 'text-green-400' : 'text-blue-400'}`}>
+                            {getResult().mbti.dimensions.J > getResult().mbti.dimensions.P ? 'J' : 'P'} ({Math.max(getResult().mbti.dimensions.J, getResult().mbti.dimensions.P)}:{Math.min(getResult().mbti.dimensions.J, getResult().mbti.dimensions.P)})
+                          </span>
+                        </div>
+                      </div>
+                      <div className="mt-2 text-xs text-gray-500 text-center">
+                        得分对比显示每个维度的倾向强度
+                      </div>
                     </div>
                   </div>
 
@@ -401,7 +454,7 @@ export default function MainApp() {
                       <div className="flex">
                         <div className="text-cyan-400 mr-2">💬</div>
                         <p className="text-gray-300 leading-relaxed italic">
-                          "{getResult().description}"
+                          "{getResult().position.description}"
                         </p>
                       </div>
                     </div>

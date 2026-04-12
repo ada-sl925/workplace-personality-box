@@ -231,12 +231,33 @@ export const personalityResults = {
   }
 };
 
+// 技术相关类型定义 - 增加权重考虑
+const technicalTypes = [
+  "competent",    // 全栈工程师/技术主管
+  "expert",       // 首席技术官/架构师
+  "pragmatic",    // 运维工程师/技术支持
+  "reserved",     // 技术研发/后端工程师
+  "structured",   // 系统管理员/IT运维
+  "thorough",     // 研究员/技术专家
+  "critical",     // 质量测试/代码审查
+  "community",    // 开源社区经理/技术布道师
+  "analytical",   // 数据分析师/战略顾问
+  "realistic",    // 产品经理/需求分析师
+  "organized",    // 流程优化专员/运营专员
+];
+
+// 技术类型权重因子 (1.5表示技术类型出现一次算1.5次)
+const TECHNICAL_WEIGHT = 1.5;
+
 // 根据选择的类型数组推荐岗位
 export function recommendPosition(selectedTypes: string[]): typeof personalityResults[keyof typeof personalityResults] {
-  // 统计每种类型出现的次数
+  // 统计每种类型出现的次数，技术类型有额外权重
   const typeCounts: Record<string, number> = {};
   selectedTypes.forEach(type => {
-    typeCounts[type] = (typeCounts[type] || 0) + 1;
+    const baseCount = typeCounts[type] || 0;
+    // 如果是技术类型，增加权重
+    const increment = technicalTypes.includes(type) ? TECHNICAL_WEIGHT : 1;
+    typeCounts[type] = baseCount + increment;
   });
 
   // 找出出现次数最多的类型
@@ -255,8 +276,17 @@ export function recommendPosition(selectedTypes: string[]): typeof personalityRe
     .filter(([_, count]) => count === maxCount)
     .map(([type]) => type);
 
-  // 按优先级选择：领导型 > 创意型 > 分析型 > 亲和型 > 其他
-  const priorityOrder = ["leader", "dominant", "assertive", "creative", "expressive", "analytical", "strategic", "agreeable", "mediator", "organizer"];
+  // 按优先级选择：技术型 > 领导型 > 创意型 > 分析型 > 亲和型 > 其他
+  const priorityOrder = [
+    // 技术能力型优先
+    "expert", "competent", "reserved", "pragmatic", "structured", "analytical",
+    // 领导型
+    "leader", "dominant", "assertive",
+    // 创意型
+    "creative", "expressive",
+    // 其他
+    "strategic", "agreeable", "mediator", "organizer"
+  ];
 
   for (const priorityType of priorityOrder) {
     if (maxTypes.includes(priorityType)) {
@@ -267,4 +297,141 @@ export function recommendPosition(selectedTypes: string[]): typeof personalityRe
 
   // 返回对应的结果，如果不存在则返回默认值
   return personalityResults[maxType as keyof typeof personalityResults] || personalityResults.creative;
+}
+
+// ==================== MBTI相关功能 ====================
+
+// MBTI维度评分映射
+const mbtiDimensionMapping: Record<string, {
+  E: number; I: number;   // 外向/内向
+  S: number; N: number;   // 感觉/直觉
+  T: number; F: number;   // 思考/情感
+  J: number; P: number;   // 判断/感知
+}> = {
+  // 外向(E)倾向类型
+  dominant: { E: 2, I: 0, S: 1, N: 1, T: 2, F: 0, J: 2, P: 0 },
+  leader: { E: 2, I: 0, S: 0, N: 2, T: 2, F: 0, J: 2, P: 0 },
+  assertive: { E: 2, I: 0, S: 1, N: 1, T: 1, F: 1, J: 1, P: 1 },
+  expressive: { E: 2, I: 0, S: 1, N: 1, T: 1, F: 1, J: 0, P: 2 },
+  collaborative: { E: 2, I: 0, S: 1, N: 1, T: 1, F: 2, J: 1, P: 1 },
+  connector: { E: 2, I: 0, S: 1, N: 1, T: 1, F: 1, J: 1, P: 1 },
+  networker: { E: 2, I: 0, S: 1, N: 1, T: 1, F: 1, J: 0, P: 2 },
+  social: { E: 2, I: 0, S: 1, N: 1, T: 0, F: 2, J: 0, P: 2 },
+  mediator: { E: 2, I: 0, S: 1, N: 1, T: 0, F: 2, J: 1, P: 1 },
+  community: { E: 2, I: 0, S: 1, N: 1, T: 1, F: 1, J: 0, P: 2 },
+
+  // 内向(I)倾向类型
+  reserved: { E: 0, I: 2, S: 2, N: 0, T: 2, F: 0, J: 1, P: 1 },
+  independent: { E: 0, I: 2, S: 1, N: 1, T: 2, F: 0, J: 0, P: 2 },
+  analytical: { E: 0, I: 2, S: 1, N: 1, T: 2, F: 0, J: 1, P: 0 },
+  conscientious: { E: 0, I: 2, S: 2, N: 0, T: 1, F: 1, J: 2, P: 0 },
+  thorough: { E: 0, I: 2, S: 2, N: 1, T: 2, F: 0, J: 1, P: 0 },
+  focused: { E: 0, I: 2, S: 1, N: 1, T: 1, F: 1, J: 1, P: 1 },
+  critical: { E: 0, I: 2, S: 1, N: 1, T: 2, F: 0, J: 1, P: 0 },
+  realistic: { E: 0, I: 1, S: 2, N: 0, T: 2, F: 0, J: 1, P: 1 },
+  risk_aware: { E: 0, I: 2, S: 1, N: 1, T: 2, F: 0, J: 2, P: 0 },
+  structured: { E: 0, I: 1, S: 2, N: 0, T: 1, F: 0, J: 2, P: 0 },
+  learner: { E: 0, I: 2, S: 1, N: 1, T: 1, F: 1, J: 1, P: 1 },
+  competent: { E: 0, I: 1, S: 1, N: 1, T: 2, F: 0, J: 1, P: 1 },
+  expert: { E: 0, I: 2, S: 1, N: 1, T: 2, F: 0, J: 2, P: 0 },
+  organized: { E: 0, I: 1, S: 2, N: 0, T: 1, F: 0, J: 2, P: 0 },
+
+  // 其他类型
+  agreeable: { E: 1, I: 1, S: 1, N: 1, T: 0, F: 2, J: 1, P: 1 },
+  creative: { E: 1, I: 1, S: 0, N: 2, T: 1, F: 1, J: 0, P: 2 },
+  flexible: { E: 1, I: 1, S: 1, N: 1, T: 1, F: 1, J: 0, P: 2 },
+  organizer: { E: 1, I: 1, S: 2, N: 0, T: 1, F: 0, J: 2, P: 0 },
+  planner: { E: 0, I: 2, S: 1, N: 1, T: 1, F: 0, J: 2, P: 0 },
+  pragmatic: { E: 1, I: 1, S: 2, N: 0, T: 2, F: 0, J: 1, P: 1 },
+  strategic: { E: 0, I: 2, S: 0, N: 2, T: 2, F: 0, J: 2, P: 0 },
+  supportive: { E: 1, I: 1, S: 1, N: 1, T: 0, F: 2, J: 1, P: 1 },
+  consultative: { E: 1, I: 1, S: 1, N: 1, T: 1, F: 1, J: 1, P: 1 },
+  cautious: { E: 0, I: 2, S: 2, N: 0, T: 1, F: 0, J: 2, P: 0 },
+  diplomatic: { E: 1, I: 1, S: 1, N: 1, T: 0, F: 2, J: 1, P: 1 },
+  tolerant: { E: 1, I: 1, S: 1, N: 1, T: 0, F: 2, J: 0, P: 2 },
+  observant: { E: 0, I: 2, S: 2, N: 0, T: 1, F: 1, J: 1, P: 1 },
+  defensive: { E: 0, I: 2, S: 1, N: 1, T: 1, F: 0, J: 2, P: 0 },
+  improvement: { E: 0, I: 2, S: 1, N: 1, T: 1, F: 0, J: 2, P: 0 },
+  sensitive: { E: 0, I: 2, S: 1, N: 1, T: 0, F: 2, J: 1, P: 1 },
+  factual: { E: 0, I: 2, S: 2, N: 0, T: 2, F: 0, J: 1, P: 0 }
+};
+
+// 16种MBTI类型的职场特征描述
+const mbtiDescriptions: Record<string, { title: string; description: string }> = {
+  "ISTJ": { title: "检查者", description: "务实、有条理、可靠，注重细节和流程" },
+  "ISFJ": { title: "保护者", description: "忠诚、体贴、有责任心，善于支持团队" },
+  "INFJ": { title: "倡导者", description: "富有洞察力、理想主义，善于理解他人需求" },
+  "INTJ": { title: "战略家", description: "理性、独立、有远见，擅长制定长期计划" },
+  "ISTP": { title: "工匠", description: "灵活、务实、善于解决问题，喜欢动手实践" },
+  "ISFP": { title: "艺术家", description: "敏感、有创造力、适应性强，注重和谐氛围" },
+  "INFP": { title: "调解者", description: "理想主义、有同理心，追求意义和价值" },
+  "INTP": { title: "思想家", description: "好奇、分析力强，喜欢探索理论和可能性" },
+  "ESTP": { title: "企业家", description: "精力充沛、务实、善于应变，喜欢行动和冒险" },
+  "ESFP": { title: "表演者", description: "热情、社交能力强，善于营造愉快氛围" },
+  "ENFP": { title: "倡导者", description: "热情、有创造力，善于激励和连接他人" },
+  "ENTP": { title: "辩论家", description: "聪明、好奇、善于辩论，喜欢智力挑战" },
+  "ESTJ": { title: "管理者", description: "高效、务实、有组织能力，善于执行计划" },
+  "ESFJ": { title: "供给者", description: "热心、合作、注重和谐，善于照顾他人" },
+  "ENFJ": { title: "教育家", description: "有魅力、有同理心，善于指导和激励他人" },
+  "ENTJ": { title: "指挥官", description: "果断、有战略眼光，善于领导和组织" }
+};
+
+// MBTI计算函数
+export function calculateMBTI(selectedTypes: string[]): {
+  type: string; // 如 "INTJ"
+  title: string; // 如 "战略家"
+  description: string; // 职场特征描述
+  dimensions: { E: number; I: number; S: number; N: number; T: number; F: number; J: number; P: number };
+} {
+  const dimensionScores = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
+
+  // 累加各维度得分
+  selectedTypes.forEach(type => {
+    const mapping = mbtiDimensionMapping[type];
+    if (mapping) {
+      dimensionScores.E += mapping.E;
+      dimensionScores.I += mapping.I;
+      dimensionScores.S += mapping.S;
+      dimensionScores.N += mapping.N;
+      dimensionScores.T += mapping.T;
+      dimensionScores.F += mapping.F;
+      dimensionScores.J += mapping.J;
+      dimensionScores.P += mapping.P;
+    }
+  });
+
+  // 确定每个维度的倾向
+  const eScore = dimensionScores.E > dimensionScores.I ? 'E' : 'I';
+  const sScore = dimensionScores.S > dimensionScores.N ? 'S' : 'N';
+  const tScore = dimensionScores.T > dimensionScores.F ? 'T' : 'F';
+  const jScore = dimensionScores.J > dimensionScores.P ? 'J' : 'P';
+
+  const mbtiType = `${eScore}${sScore}${tScore}${jScore}`;
+  const mbtiInfo = mbtiDescriptions[mbtiType] || {
+    title: "未定义类型",
+    description: "无法确定具体人格类型"
+  };
+
+  return {
+    type: mbtiType,
+    title: mbtiInfo.title,
+    description: mbtiInfo.description,
+    dimensions: dimensionScores
+  };
+}
+
+// 完整结果函数（返回职位推荐和MBTI信息）
+export function getCompleteResult(selectedTypes: string[]): {
+  position: typeof personalityResults[keyof typeof personalityResults];
+  mbti: {
+    type: string;
+    title: string;
+    description: string;
+    dimensions: { E: number; I: number; S: number; N: number; T: number; F: number; J: number; P: number };
+  };
+} {
+  const position = recommendPosition(selectedTypes);
+  const mbti = calculateMBTI(selectedTypes);
+
+  return { position, mbti };
 }
